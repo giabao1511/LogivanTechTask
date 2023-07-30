@@ -107,7 +107,7 @@ export const ShipmentStep = ({
   };
 
   const handleDescriptionAdditionalStep = () => {
-    return additional_steps?.map(handleDescription).filter(Boolean) || []; 
+    return additional_steps?.map(handleDescription).filter(Boolean) || [];
   };
 
   // Memoize the descriptions array
@@ -204,20 +204,13 @@ export const ShipmentStep = ({
             </Text>
           </View>
         </View>
-        <View>
-          {memoizedDescriptions?.map((item, index) => {
-            return (
-              <Text
-                key={index}
-                style={{
-                  color: memoizedColorText,
-                }}
-              >
-                {item}
-              </Text>
-            );
-          })}
-        </View>
+        <FlatList
+          data={memoizedDescriptions}
+          renderItem={({ item }) => (
+            <Text style={{ color: memoizedColorText }}>{item}</Text>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     </View>
   );
