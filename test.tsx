@@ -27,6 +27,10 @@ interface Step {
   additional_steps?: Step[];
 }
 
+/* I split those states to variables because I want to make the code more clearly, and those states can be reused multiple time, 
+when we want to change their values, just change right here, easy for debugging and maintanance. Furthermore, those states will 
+depend on the values of the statusStep, so that it will available with any kind of value that we could change in statusStep and typeStep*/ 
+
 const statusColors = {
   [statusStep.current]: "#FE6F12",
   [statusStep.complete]: "green",
@@ -48,15 +52,6 @@ const typeTexts = {
   [typeStep.end]: "Hoàn thành",
 };
 
-const styles = {
-  rowContainerStyle: {
-    flexDirection: "row",
-  },
-  inActiveStep: {
-    opacity: 0.5,
-  },
-};
-
 export const ShipmentStep = ({
   stepData,
   numberStep,
@@ -64,7 +59,12 @@ export const ShipmentStep = ({
   stepData: Step;
   numberStep: number;
 }) => {
+  /* I use destructuring in ES6 here to split 3 variable match with 3 property in stepData. This will shorten the
+  code and make it more readable.  */ 
   const { status, type, additional_steps } = stepData;
+
+  /* I use useMemo Hook here because I want to memorize some variable that no need to be
+   recalculated every time the component re-renders, just when their dependencies change.*/
 
   // Memoize the handleColor function
   const memoizedColor = useMemo(() => statusColors[status], [status]);
@@ -81,6 +81,10 @@ export const ShipmentStep = ({
   const handleDescription = (element?: any) => {
     const typeHandle = element?.type || type;
     const delivery = element?.delivery || stepData?.delivery;
+
+    /* I use Switch Case here instead of If else for several reasons: 
+    - First, a switch statement is more appropriate in this case because we are checking multiple cases against the typeHandle value.
+    - Secondly, for a large number of cases, a switch statement can be more readable than a chain of if-else statements */
 
     switch (typeHandle) {
       case typeStep.start:
@@ -107,6 +111,9 @@ export const ShipmentStep = ({
   };
 
   const handleDescriptionAdditionalStep = () => {
+    /* I remove the If (element) check in the "map" function because I think it's not necessary to check for null or undefined values, 
+    the "handleDescription" function will check for us. Instead of using filter to remove "null" values, we can directly use filter(Boolean) 
+    to filter out falsy values (including "null"). */
     return additional_steps?.map(handleDescription).filter(Boolean) || [];
   };
 
@@ -204,6 +211,8 @@ export const ShipmentStep = ({
             </Text>
           </View>
         </View>
+        {/* I use FlatList here instead of View because FlatList will be more suitable for rendering a large list than View, it uses lazy Loading
+        to renders the items that are currently visible on the screen and unmounts the components that go off-screen.*/}
         <FlatList
           data={memoizedDescriptions}
           renderItem={({ item }) => (
