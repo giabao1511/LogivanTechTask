@@ -126,6 +126,9 @@ export const ShipmentStep = ({
   }, [stepData, additional_steps]);
 
   return (
+    /* Beside that, I think we should split the style to the css file or the style object for reusing and making the code 
+    more easier to read. It will shorten the "return" code and when we want to see its styles, we just need to click on the css file or
+    css object to see it, it will be more clearly */
     <View
       style={[
         {
