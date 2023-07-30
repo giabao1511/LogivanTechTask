@@ -107,7 +107,7 @@ export const ShipmentStep = ({
   };
 
   const handleDescriptionAdditionalStep = () => {
-    return additional_steps?.map(handleDescription).filter(Boolean) || [];
+    return additional_steps?.map(handleDescription).filter(Boolean) || []; 
   };
 
   // Memoize the descriptions array
